@@ -28,6 +28,7 @@ export default class ToDo extends React.Component {
   _toggleComplete = () => {
     this.setState(prevState => {
       return ({
+        
         isCompleted: !prevState.isCompleted
       });
     });
