@@ -29,7 +29,7 @@ export default class App extends React.Component {
         <View style={styles.card}>
           <TextInput 
             style={styles.input} 
-            placeholder="new to do" 
+            placeholder="New To Do" 
             value={newToDo}
             onChangeText={this._crontolNewToDo}
             placeholderTextColor={"#999"}
