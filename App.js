@@ -37,7 +37,7 @@ export default class App extends React.Component {
             autoCorret={false}
             />
           <ScrollView contentContainerStyle={styles.toDos}>
-            <ToDo/>
+            <ToDo text={"Heelo"}/>
           </ScrollView>
         </View>
       </View>
