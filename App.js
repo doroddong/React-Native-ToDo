@@ -48,7 +48,9 @@ export default class App extends React.Component {
             onSubmitEditing={this._addToDo}
             />
           <ScrollView contentContainerStyle={styles.toDos}>
-            {Object.values(toDos).map(toDo => (
+            {Object.values(toDos)
+            .reverse()
+            .map(toDo => (
               <ToDo 
                 key={toDo.id}
                 deleteToDo={this._deleteToDo}
@@ -68,10 +70,19 @@ export default class App extends React.Component {
       newToDo:text
     });
   };
-  _loadToDos=()=>{
-    this.setState({
-      loadedToDos:true
-    });
+  _loadToDos=async()=>{
+    try{
+      const toDos=await AsyncStorage.getItem("toDos");
+      const parsedToDos=JSON.parse(toDos);
+      console.log(toDos);
+      this.setState({
+        loadedToDos:true,
+        toDos:parsedToDos
+      });
+    }
+    catch(err){
+      console.log(err)
+    }
   };
   _addToDo = () => {
     const { newToDo } = this.state;
@@ -107,7 +118,7 @@ export default class App extends React.Component {
         ...prevState,
         ...toDos
       }
-      this._saveToDos(newState,toDos);
+      this._saveToDos(newState.toDos);
       return {...newState};
     });
   };
@@ -123,7 +134,7 @@ export default class App extends React.Component {
           }
         }
       };
-      this._saveToDos(newState,toDos);
+      this._saveToDos(newState.toDos);
       return {...newState};
     });
   };
@@ -139,7 +150,7 @@ export default class App extends React.Component {
           }
         }
       };
-      this._saveToDos(newState,toDos);
+      this._saveToDos(newState.toDos);
       return {...newState};
     });
   };
@@ -155,12 +166,11 @@ export default class App extends React.Component {
           }
         }
       };
-      this._saveToDos(newState,toDos);
+      this._saveToDos(newState.toDos);
       return {...newState};
     });
   };
   _saveToDos=newToDos=>{
-    console.log(JSON.stringify(newToDos));
     const saveToDos=AsyncStorage.setItem("toDos",JSON.stringify(newToDos));
   };
 }
