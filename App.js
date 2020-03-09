@@ -8,6 +8,7 @@ import {
   Dimensions,
   Platform, 
   ScrollView,
+  AsyncStorage,
 } from 'react-native';
 import {AppLoading} from "expo";
 import ToDo from "./ToDo"
@@ -72,32 +73,29 @@ export default class App extends React.Component {
       loadedToDos:true
     });
   };
-  _addToDo=()=>{
-    const {newToDo}=this.state;
-    console.log("start")
-    if(newToDo!=""){
-      this.setState(prevState=>{
-        const ID = Math.floor(Math.random()*1000)+1
-        console.log(ID)
-        const newToDoObject ={
-          [ID]:{
-            id:ID,
-            isCompleted:false,
-            text:newToDo,
-            createdAt:Date.now()
+  _addToDo = () => {
+    const { newToDo } = this.state;
+    if (newToDo !== "") {
+      this.setState(prevState => {
+        const ID = JSON.stringify(Math.floor(Math.random()*10000)+1);
+        const newToDoObject = {
+          [ID]: {
+            id: ID,
+            isCompleted: false,
+            text: newToDo,
+            createdAt: Date.now()
           }
         };
-        console.log("start3")
-        const newState={
+        const newState = {
           ...prevState,
-          newToDo:"",
-          toDos:{
+          newToDo: "",
+          toDos: {
             ...prevState.toDos,
             ...newToDoObject
           }
         };
-        console.log("start4")
-        return {...newState};
+        this._saveToDos(newState.toDos);
+        return { ...newState };
       });
     }
   };
@@ -109,6 +107,7 @@ export default class App extends React.Component {
         ...prevState,
         ...toDos
       }
+      this._saveToDos(newState,toDos);
       return {...newState};
     });
   };
@@ -124,6 +123,7 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveToDos(newState,toDos);
       return {...newState};
     });
   };
@@ -139,6 +139,7 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveToDos(newState,toDos);
       return {...newState};
     });
   };
@@ -154,8 +155,13 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveToDos(newState,toDos);
       return {...newState};
     });
+  };
+  _saveToDos=newToDos=>{
+    console.log(JSON.stringify(newToDos));
+    const saveToDos=AsyncStorage.setItem("toDos",JSON.stringify(newToDos));
   };
 }
 
